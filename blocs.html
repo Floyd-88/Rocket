@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<style>
+ *{
+box-sizing: border-box;
+}
+body {
+height: 100vh;
+margin: auto;
+background-color: #21252b;
+background-repeat: no-repeat;
+background-size:cover;
+}
+</style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Blocks</title>
+</head>
+<body>
+<script>
+
+
+function soundClick() {
+  audio = new Audio();                  // Создаём новый элемент Audio;
+  audio.src = 'music/segastart.mp3';    // Указываем путь к звуку "клика";
+   audio.play();                        // Запускаем по клику;
+
+}
+function soundClick2() {
+  audio2 = new Audio(); 				// Создаём новый элемент Audio
+  audio2.src = 'music/segastop.mp3'; 	// Указываем путь к звуку "клика"
+  audio2.play(); 				// Автоматически запускаем
+}
+
+function soundClickStop() {             // Останавливаем звук;
+audio.currentTime = 0;
+audio.pause();
+}
+
+function soundClickStop2() {			// Останавливаем звук;		
+audio2.currentTime = 0;
+audio2.pause();
+}
+
+let bigRow = document.createElement("div"); //Основной экран;
+document.body.append(bigRow);
+bigRow.style.cssText =
+	`display: flex;
+    flex-flow: column wrap;
+    width: 100%;
+    height: 100%;`
+
+let firstRow = document.createElement("div"); //Первый ряд основного экрана;
+bigRow.append(firstRow);
+firstRow.style.cssText =
+	`display: flex;
+    width: 100%;
+    height: 85%;`
+
+
+let btn = document.createElement("div"); // Второй ряд (блок с кнопками);
+bigRow.append(btn);
+btn.style.cssText =
+	`display: flex;
+    height: 15%;
+    flex-direction: row;`;
+
+let btn01 = document.createElement("div"); //Подблок с кнопками ("влево");
+btn.append(btn01);
+btn01.style.cssText =
+	`display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 33%;`;
+
+let btn02 = document.createElement("div"); //Подблок с кнопками ("назад","вперед");
+btn.append(btn02);
+btn02.style.cssText =
+	`display: flex;
+    justify-content: center;
+    height: 100%;
+    flex-direction: column;
+    width: 34%;`;
+
+    let btn03 = document.createElement("div"); //Подблок с кнопками ("вправо");
+btn.append(btn03);
+btn03.style.cssText =
+	`display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 33%;`;
+
+let mainBlock = document.createElement("div"); //Активная зона (первый ряд);
+firstRow.append(mainBlock);
+mainBlock.style.cssText =
+  	 `width: 100%;
+    height: 100%;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    background: url(./img/Cosmos.png) 0% 0% / cover no-repeat;
+    position: relative;
+    overflow: hidden;`;
+
+let mainBtn = document.createElement("div"); //Колонка с кнопками старт, стоп, таймер;
+firstRow.append(mainBtn);
+mainBtn.style.cssText =
+  	 `display: flex;
+	flex-direction: column;`;
+
+let btnStart = document.createElement("button"); //Кнопка старт;
+mainBtn.append(btnStart);
+btnStart.style.cssText =
+	`width: 50px;
+	height: 50px;
+	display: flex;`;
+btnStart.innerHTML = "Start";
+btnStart.addEventListener("click", goToBlock);
+btnStart.addEventListener("click", timerGo);
+btnStart.addEventListener("click", disabledStart);
+btnStart.addEventListener("click", soundClick);
+
+function disabledStart() {       //Блокировка кнопки старт при нажатии;
+btnStart.disabled = true;
+btnStop.disabled = false;
+gameOver.style.opacity = 0.0;
+};
+
+let btnStop = document.createElement("button"); //Кнопка стоп;
+mainBtn.append(btnStop);
+btnStop.style.cssText =
+	`width: 50px;
+	height: 50px;
+	display: flex;`;
+	btnStop.disabled = true;
+btnStop.innerHTML = "Stop";
+btnStop.addEventListener("click", disabledStop)
+btnStop.addEventListener("click", stopToGame);
+
+function disabledStop() {        //Блокировка кнопки стоп при нажатии;
+btnStop.disabled = true;
+};
+
+let gameOver = document.createElement("div"); //Сообщение конец;
+mainBlock.append(gameOver);
+gameOver.style.cssText =
+	`display: flex;
+	justify-content: center;
+    margin: auto;
+    font-size: 49px;
+    font-family: fantasy;
+    color: firebrick;
+     text-shadow: -10px 10px 0px #b2222278, -20px 20px 0px #cc010159, -30px 30px 0px #bd00003b;
+	`;
+gameOver.innerHTML = "GAME OVER";
+gameOver.style.opacity = 0.0;
+
+function stopToGame() {
+soundClickStop();
+soundClick2();
+clearInterval(timerId000); // Остановка таймера
+a = 0;
+c = "0";
+b = "01";
+
+window.timerId09 = setInterval( // Плавное возникновение конца игры;
+function() {
+	gameOver.style.opacity = +gameOver.style.opacity + 0.01;
+	if(gameOver.style.opacity == +1.0) {
+		clearInterval(timerId09)
+	btnStart.disabled = false;
+btnStart.disabled = false;};	
+}, 25);
+
+clearInterval(timerId01); //Остановка движения первого блока
+
+clearTimeout(timerId001); //Остановка запуска первого блока
+clearTimeout(timerId002); //Остановка запуска второго блока
+clearTimeout(timerId003); //Остановка запуска третьего блока
+clearTimeout(timerId004); //Остановка запуска четвертого блока
+clearTimeout(timerId005); //Остановка запуска в бок 1 блока
+clearTimeout(timerId006); //Остановка ускорения
+/*clearTimeout(timerId006); //Остановка запуска вращения
+clearTimeout(timerId007); //Остановка запуска вращения*/
+/*clearTimeout(timerId006);*/ //Остановка запуска в бок 3 блока
+
+btnStop.disabled = true;
+
+seconds = 0.14; 
+
+
+row01.style.top = 100 + "%"; // Возвращвет обратно на свои позиции блоки
+row02.style.top = 100 + "%";
+row03.style.top = 100 + "%";
+row04.style.top = 100 + "%";
+
+car.bolid.style.top = 1 + "%"; // Возвращает ракету на изначальное место
+car.bolid.style.left = 50 + "%";
+car.top = 1;
+car.left = 50;
+
+block['topBlock1'] = 100;
+block['topBlock2'] = 100;
+block['topBlock3'] = 100;
+block['topBlock4'] = 100;
+
+
+
+clearInterval(timerId02); //Остановка движения второго блока
+clearInterval(timerId03); //Остановка движения третьего блока
+clearInterval(timerId04); //Остановка движения четвертого блока
+
+clearInterval(timerId05); //Остановка движения 1 и 3 блока к центру
+block["bodyBlock"].style.left = 0;
+block["bodyBlock3"].style.left = 0;
+block["bodyBlock6"].style.left = 0;
+block["bodyBlock8"].style.left = 0;
+
+clearInterval(timerId07); //Остановка движения 1 и 3 блока к краям
+
+
+
+
+clearInterval(timerId08); //Касние перестает работать;
+
+};
+
+
+
+/*let btnPause = document.createElement("button"); //Кнопка пауза;
+mainBtn.append(btnPause);
+btnPause.style.cssText =
+	`width: 50px;
+	height: 50px;
+	display: flex;`;
+btnPause.innerHTML = "Pause"
+btnPause.addEventListener("click", stopToBlock);
+btnPause.addEventListener("click", disabledPause);*/
+
+
+
+let timerBlock = document.createElement("div"); //Таймер;
+mainBtn.append(timerBlock);
+timerBlock.style.cssText =
+	`width: 50px;
+	height: 50px;
+	background-color: #52ab60;
+	display: flex;
+	border: 1px solid black;
+	justify-content: center;
+    align-items: center;`;
+
+timerBlock.innerHTML = "0" + ":" + "00";
+
+timerBlock.style.fontSize = "20px";
+let a = 0;
+let c = "0";
+let b = "01";
+
+function timerGo() { 				//Запуск таймера;
+window.timerId000 = window.setInterval(timer00, 1000);};
+
+function timer00() {			     //Отсчет мин и сек;
+timerBlock.innerHTML = a + "" + ":" + "" + b;
+if(b <= 8) {
+b = c + '' + (+b + 1);} else {b = +b + 1}
+if(b == 60) {
+b = "00";};
+if (b == 00) {
+a = a + 1;};
+};
+
+
+
+
+
+/*function stopToBlock() { //Остановка при нажатии на паузу (коряво);
+clearInterval(timerId01);
+
+clearTimeout(timerId001);
+clearTimeout(timerId002);
+clearTimeout(timerId003);
+clearTimeout(timerId004);
+clearTimeout(timerId005);
+
+clearInterval(timerId02);
+clearInterval(timerId03);
+clearInterval(timerId04);
+clearInterval(timerId05);
+clearInterval(timerId06);
+};*/
+
+
+
+
+let row01 = document.createElement("div"); //Первая линия с блоками;
+mainBlock.append(row01);
+row01.style.cssText =
+	`display: flex;
+    	justify-content: space-between;
+   	 position: absolute;
+    	top:100%;
+    	height: 3.5%;
+    	width: 100%;`;
+
+let row02 = document.createElement("div"); //Вторая линия с блоками;
+mainBlock.append(row02);
+row02.style.cssText =
+	`display: flex;
+    	justify-content: space-around;
+    	position: absolute;
+    	top:100%;
+    	height: 3.5%;
+    	width: 100%;`;
+
+let row03 = document.createElement("div"); //Третья линия с блоками;
+mainBlock.append(row03);
+row03.style.cssText =
+	`display: flex;
+    	justify-content: space-between;
+    	position: absolute;
+    	top:100%;
+    	height: 3.5%;
+    	width: 100%;`;
+
+
+let row04 = document.createElement("div"); //Четвертая линия с блоками;
+mainBlock.append(row04);
+row04.style.cssText =
+	`display: flex;
+    	justify-content: center;
+    	position: absolute;
+    	top:100%;
+    	height: 3.5%;
+    	width: 100%;`;
+
+
+
+let car = {
+	bolid00: "",
+	bolid: "",
+	gas: "go",
+	noGas: "stop",
+	leftGas: "left",
+	rightGas: "right",
+	top: 0,
+	left: 50,
+	back: "goBack",
+};
+
+
+
+car.bolid = document.createElement("img"); //Сам болид;
+mainBlock.append(car.bolid);
+car.bolid.style.cssText =
+	`border-radius: 38%;
+    width: 11%;
+    height: 11%;
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    border-radius: 40%;`;
+car.bolid.src = "./img/transparent.png";
+
+
+/*car.bolid00 = document.createElement("div"); //Оболочка болида;
+car.bolid.append(car.bolid00);
+car.bolid00.style.cssText =
+	`
+width: 138%;
+    height: 113%;
+	background: url("./img/transparent.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+	position: absolute;
+	top: -13.5%;
+	left: -18.5%;
+	    border: 1px solid black;`;*/
+
+/*car.back0 = document.createElement("button"); //Псевдокнопка назад;
+
+btn01.append(car.back0);
+car.back0.style.cssText =
+	`width: 100%;
+	height: 100%;
+	background-color: #3ebd5c;
+	background-size: contain;
+    	background-repeat: no-repeat;
+    	background-position: center;`*/
+
+car.leftGas = document.createElement("button"); //Кнопка влево;
+
+btn01.append(car.leftGas);
+car.leftGas.style.cssText =
+	`width: 100%;
+	height: 100%;
+	background: url("./img/left.png");
+		background-color: #3ebd5c;
+	background-size: contain;
+    	background-repeat: no-repeat;
+    	background-position: center;`;
+
+
+car.back = document.createElement("button"); //Кнопка назад;
+btn02.append(car.back);
+car.back.style.cssText =
+	`width: 100%;
+    height: 100%;
+    margin-left: 0px;
+    margin-right: 0px;
+	background: url("./img/back.png");
+		background-color: #3ebd5c;
+	background-size: contain;
+    	background-repeat: no-repeat;
+    	background-position: center;`;
+
+/*car.back02 = document.createElement("button"); //Псевдокнопка назад;
+btn01.append(car.back02);
+car.back02.style.cssText =
+	`width: 100%;
+	height: 100%;
+	background-color: #3ebd5c;
+	background-size: contain;
+    	background-repeat: no-repeat;
+    	background-position: center;`*/
+
+
+
+car.gas = document.createElement("button"); //Кнопка вперед;
+
+btn02.append(car.gas);
+car.gas.style.cssText =
+	`width: 100%;
+    height: 100%;
+    margin-left: 0px;
+    margin-right: 0px;
+    	background: url("./img/go.png");
+		background-color: #3ebd5c;
+	background-size: contain;
+    	background-repeat: no-repeat;
+    	background-position: center;`;
+
+car.rightGas = document.createElement("button"); //Кнопка вправо;
+
+btn03.append(car.rightGas);
+car.rightGas.style.cssText =
+	`width: 100%;
+	height: 100%;
+	background: url("./img/right.png");
+		background-color: #3ebd5c;
+	background-size: contain;
+    	background-repeat: no-repeat;
+    	background-position: center;
+    	border: 1px solid black;`;
+
+
+car.gas.addEventListener("pointerdown", goTo); //Движение при нажатии;
+car.gas.addEventListener("pointerup", stopTo); // Остановка при отпускании;
+car.gas.addEventListener("pointerout", stopTo); // Остановка при покидании кнопки;
+
+car.back.addEventListener("pointerdown", backTo);
+car.back.addEventListener("pointerup", stopTo);
+car.back.addEventListener("pointerout", stopTo);
+
+car.leftGas.addEventListener("pointerdown", leftTo);
+car.leftGas.addEventListener("pointerup", stopTo);
+car.leftGas.addEventListener("pointerout", stopTo);
+
+car.rightGas.addEventListener("pointerdown", rightTo);
+car.rightGas.addEventListener("pointerup", stopTo);
+car.rightGas.addEventListener("pointerout", stopTo);
+
+function goTo() { 			//Рекурсия вперед;
+window.timerId = window.setTimeout(
+function forward() {
+car.bolid.style.top = `${car.top}%`;
+car.top = car.top + 0.3;
+if (car.top > 87) {
+car.top = 87;
+	};
+window.timerId = window.setTimeout(forward, 15)}, 15);
+};
+
+function backTo() {			//Рекурсия назад;
+window.timerId = window.setTimeout(
+function noforward() {
+car.bolid.style.top = `${car.top}%`;
+car.top = car.top - 0.3;
+if (car.top < 0) {
+car.top = 0;
+	};
+window.timerId = window.setTimeout(noforward, 15)}, 15);
+
+};
+
+function leftTo() {			//Рекурсия влево;
+window.timerId = window.setTimeout(
+function leftforward() {
+car.bolid.style.left = `${car.left}%`;
+car.left = car.left - 0.3;
+if (car.left < -2) {
+car.left = 87.7;
+	};
+
+window.timerId = window.setTimeout(leftforward, 15)}, 15);
+};
+
+function rightTo() {			//Рекурсия вправо;
+window.timerId = window.setTimeout(
+function rightforward() {
+car.bolid.style.left = `${car.left}%`;
+car.left = car.left + 0.3;
+if (car.left > 87.7) {
+car.left = -2;
+	};
+window.timerId = window.setTimeout(rightforward, 15)}, 15);
+};
+
+function stopTo() {
+clearTimeout(timerId);
+};
+
+
+
+let block = {
+	bodyBlock: "",
+	topBlock1: +100,
+	topBlock2: +100,
+	topBlock3: +100,
+	topBlock4: +100,
+	leftBlock: +0,
+	leftBlock2: +0,
+};
+
+block["bodyBlock"] = document.createElement("img");
+row01.append(block["bodyBlock"]);
+block["bodyBlock"].style.cssText =
+   `width: 20%;   
+    left: 0px;
+    display: flex;
+    position: relative;`;
+block["bodyBlock"].src = "./img/log.png";
+
+block["bodyBlock2"] = document.createElement("img");
+row01.append(block["bodyBlock2"]);
+block["bodyBlock2"].style.cssText =
+   `width: 20%;   
+    left: 0px;
+    display: flex;
+   	position: relative;`;
+block["bodyBlock2"].src = "./img/log.png";
+
+block["bodyBlock3"] = document.createElement("img");
+row01.append(block["bodyBlock3"]);
+block["bodyBlock3"].style.cssText =
+   `width: 20%;   
+    display: flex;
+    position: relative;`;
+    block["bodyBlock3"].src = "./img/log.png";
+
+block["bodyBlock4"] = document.createElement("img");
+row02.append(block["bodyBlock4"]);
+block["bodyBlock4"].style.cssText =
+   `width: 20%;   
+    left: 0px;
+    display: flex;
+    position: relative;`;
+block["bodyBlock4"].src = "./img/log.png";
+
+block["bodyBlock5"] = document.createElement("img");
+row02.append(block["bodyBlock5"]);
+block["bodyBlock5"].style.cssText =
+   `width: 20%;   
+    left: 0px;
+    display: flex;
+    position: relative;`;
+block["bodyBlock5"].src = "./img/log.png";
+
+block["bodyBlock6"] = document.createElement("img");
+row03.append(block["bodyBlock6"]);
+block["bodyBlock6"].style.cssText =
+   `width: 20%;   
+    left: 0px;
+    display: flex;
+    position: relative;`;
+block["bodyBlock6"].src = "./img/log.png";
+
+block["bodyBlock7"] = document.createElement("img");
+row03.append(block["bodyBlock7"]);
+block["bodyBlock7"].style.cssText =
+   `width: 20%;   
+    left: 0px;
+    display: flex;
+    position: relative;`;
+block["bodyBlock7"].src = "./img/log.png";
+
+block["bodyBlock8"] = document.createElement("img");
+row03.append(block["bodyBlock8"]);
+block["bodyBlock8"].style.cssText =
+   `width: 20%;   
+    left: 0px;
+    display: flex;
+    position: relative;`;
+block["bodyBlock8"].src = "./img/log.png";
+
+block["bodyBlock9"] = document.createElement("img");
+row04.append(block["bodyBlock9"]);
+block["bodyBlock9"].style.cssText =
+   `width: 20%;   
+    left: 0px;
+    display: flex;
+    position: relative;`;
+block["bodyBlock9"].src = "./img/log.png";
+
+block["bodyBlock10"] = document.createElement("img");
+row04.append(block["bodyBlock10"]);
+block["bodyBlock10"].style.cssText =
+   `width: 20%;   
+    left: 0px;
+    display: flex;
+    position: relative;`;
+block["bodyBlock10"].src = "./img/log.png";
+
+block["bodyBlock11"] = document.createElement("img");
+row04.append(block["bodyBlock11"]);
+block["bodyBlock11"].style.cssText =
+   `width: 20%;   
+    left: 0px;
+    display: flex;
+    position: relative;`;
+block["bodyBlock11"].src = "./img/log.png";
+
+function goToBlock() {			//Начинает движение блоков
+window.timerId001 = setTimeout(goToBlock1, 1);
+window.timerId002 = setTimeout(goToBlock2, 4500);
+window.timerId003 = setTimeout(goToBlock3, 9000);
+window.timerId004 = setTimeout(goToBlock4, 13500);
+
+window.timerId005 = setTimeout(goToBlockLeft1, 40000);
+
+window.timerId006 = setTimeout(secondsSpeed, 80000); //Изменение скорости движения
+/*window.timerId006 = setTimeout(goToBlockRotation, 10000);
+window.timerId007 = setTimeout(goToBlockRotation2, 10000);*/
+/*window.timerId006 = setTimeout(goToBlockLeft2, 500);*/
+searchTop();
+}
+
+function goToBlock1() {
+window.timerId01 = window.setInterval(forwardBlock1, 25);
+};
+function goToBlock2() {
+window.timerId02 = window.setInterval(forwardBlock2, 25);
+};
+function goToBlock3() {
+window.timerId03 = window.setInterval(forwardBlock3, 25);
+};
+function goToBlock4() {
+window.timerId04 = window.setInterval(forwardBlock4, 25);
+};
+function goToBlockLeft1() {
+window.timerId05 = window.setInterval(leftBlock01, 100);
+}
+
+let seconds = 0.14; 			//Скорость движения блоков
+
+function secondsSpeed() {
+	return seconds = 0.2; 						//Скорость меняется
+};
+
+/*function goToBlockLeft2() {
+window.timerId06 = window.setInterval(leftBlock02, 90);
+}*/
+
+function forwardBlock1() { 		//Движения 1 ряда;
+row01.style.top = `${block['topBlock1']}%`;
+block['topBlock1'] = block['topBlock1'] - seconds;
+console.log(seconds);	
+if (block['topBlock1'] < 0) {
+block['topBlock1'] = 100;
+	};
+};
+
+function forwardBlock2() { 		//Движения 2 ряда;
+row02.style.top = `${block['topBlock2']}%`;
+block['topBlock2'] = block['topBlock2'] - seconds;
+
+if (block['topBlock2'] < 0) {
+block['topBlock2'] = 100;
+	};
+};
+
+function forwardBlock3() { 		//Движения 3 ряда;
+row03.style.top = `${block['topBlock3']}%`;
+block['topBlock3'] = block['topBlock3'] - seconds;
+
+if (block['topBlock3'] <= 0) {
+block['topBlock3'] = 100;
+	};
+};
+
+function forwardBlock4() { 		//Движения 4 ряда;
+row04.style.top = `${block['topBlock4']}%`;
+block['topBlock4'] = block['topBlock4'] - seconds;
+
+if (block['topBlock4'] < 0) {
+block['topBlock4'] = 100;
+	};
+};
+
+function leftBlock01() { 		//Движения крайних блоков 1 и 3 ряда к центру;
+block["bodyBlock"].style.left  = `${block['leftBlock'] = block['leftBlock'] + 0.25}%`;
+block["bodyBlock3"].style.left = `${block['leftBlock2'] = block['leftBlock2']  - 0.25}%`;
+
+block["bodyBlock6"].style.left  = `${block['leftBlock'] = block['leftBlock'] + 0.25}%`;
+block["bodyBlock8"].style.left = `${block['leftBlock2'] = block['leftBlock2']  - 0.25}%`;
+
+if(block['leftBlock'] >= 19) {
+goToBlockRight1();
+clearInterval(timerId05);
+	};
+};
+
+/*function leftBlock02() { 
+block["bodyBlock6"].style.left  = `${block['leftBlock'] = block['leftBlock'] + 0.3}%`;
+block["bodyBlock8"].style.left = `${block['leftBlock2'] = block['leftBlock2']  - 0.3}%`;
+
+if(block['leftBlock'] >= 11) {
+goToBlockRight2();
+clearInterval(timerId06);
+	};
+}*/
+
+function goToBlockRight1() {
+window.timerId07 = window.setInterval(rightBlock01, 100)
+};
+
+/*function goToBlockRight2() {
+window.timerId08 = window.setInterval(rightBlock2, 150)
+};*/
+
+function rightBlock01() { //Движения крайних блоков 1 и 3 ряда к краям;
+block["bodyBlock"].style.left  = `${block['leftBlock'] = block['leftBlock'] - 0.25}%`;
+block["bodyBlock3"].style.left = `${block['leftBlock2'] = block['leftBlock2']  + 0.25}%`;
+block["bodyBlock6"].style.left  = `${block['leftBlock'] = block['leftBlock'] - 0.25}%`;
+block["bodyBlock8"].style.left = `${block['leftBlock2'] = block['leftBlock2']  + 0.25}%`;
+
+if(block['leftBlock'] <= 0) {
+goToBlockLeft1();
+clearInterval(timerId07);
+	}
+}
+/*function rightBlock2() {
+block["bodyBlock6"].style.left  = `${block['leftBlock'] = block['leftBlock'] - 0.3}%`;
+block["bodyBlock8"].style.left = `${block['leftBlock2'] = block['leftBlock2']  + 0.3}%`;
+
+if(block['leftBlock'] <= -3) {
+goToBlockLeft2();
+clearInterval(timerId08);
+	}
+};*/
+
+
+/*function goToBlockRotation(){
+	let deg = 0;
+timerId09 = setInterval(function() {
+	deg = deg + 1;
+	block["bodyBlock4"].style.transform = `rotate(${deg}deg)`;
+	if(deg == 360) {deg = 0};
+}, 20);
+};
+
+
+function goToBlockRotation2() {
+	let deg2 = 360; 
+timerId10 = setInterval(function() {
+	deg2 = deg2 - 1;
+	block["bodyBlock5"].style.transform = `rotate(${deg2}deg)`;
+	if(deg == 0) {deg = 360};
+}, 20);
+
+}*/
+
+
+function searchTop() {			//Остановка при касании блока;
+window.timerId08 = window.setInterval(searchTopFunc, 10);
+}
+
+function searchTopFunc() {
+let coord0 = car.bolid.getBoundingClientRect();
+let coord1 = block["bodyBlock"].getBoundingClientRect();
+let coord2 = block["bodyBlock2"].getBoundingClientRect();
+let coord3 = block["bodyBlock3"].getBoundingClientRect();
+let coord4 = block["bodyBlock4"].getBoundingClientRect();
+let coord5 = block["bodyBlock5"].getBoundingClientRect();
+let coord6 = block["bodyBlock6"].getBoundingClientRect();
+let coord7 = block["bodyBlock7"].getBoundingClientRect();
+let coord8 = block["bodyBlock8"].getBoundingClientRect();
+let coord9 = block["bodyBlock9"].getBoundingClientRect();
+let coord10 = block["bodyBlock10"].getBoundingClientRect();
+let coord11 = block["bodyBlock11"].getBoundingClientRect();
+
+if(coord0.bottom >= (coord1.bottom - (coord1.bottom - coord1.top)) && coord0.top <= (coord1.top + (coord1.bottom - coord1.top)) && coord0.left > (coord1.left - (coord0.right - coord0.left)) && coord0.left  < (coord1.left + (coord1.right - coord1.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+
+}
+
+if(coord0.bottom >= (coord2.bottom - (coord2.bottom - coord2.top)) && coord0.top <= (coord2.top + (coord2.bottom - coord2.top)) && coord0.left > (coord2.left - (coord0.right - coord0.left)) && coord0.left  < (coord2.left + (coord2.right - coord2.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+}
+
+if(coord0.bottom >= (coord3.bottom - (coord3.bottom - coord3.top)) && coord0.top <= (coord3.top + (coord3.bottom - coord3.top)) && coord0.left > (coord3.left - (coord0.right - coord0.left)) && coord0.left  < (coord3.left + (coord3.right - coord3.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+ }
+
+if(coord0.bottom >= (coord4.bottom - (coord4.bottom - coord4.top)) && coord0.top <= (coord4.top + (coord4.bottom - coord4.top)) && coord0.left > (coord4.left - (coord0.right - coord0.left)) && coord0.left  < (coord4.left + (coord4.right - coord4.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+}
+
+if(coord0.bottom >= (coord5.bottom - (coord5.bottom - coord5.top)) && coord0.top <= (coord5.top + (coord5.bottom - coord5.top)) && coord0.left > (coord5.left - (coord0.right - coord0.left)) && coord0.left  < (coord5.left + (coord5.right - coord5.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+}
+
+if(coord0.bottom >= (coord6.bottom - (coord6.bottom - coord6.top)) && coord0.top <= (coord6.top + (coord6.bottom - coord6.top)) && coord0.left > (coord6.left - (coord0.right - coord0.left)) && coord0.left  < (coord6.left + (coord6.right - coord6.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+}
+
+if(coord0.bottom >= (coord7.bottom - (coord7.bottom - coord7.top)) && coord0.top <= (coord7.top + (coord7.bottom - coord7.top)) && coord0.left > (coord7.left - (coord0.right - coord0.left)) && coord0.left  < (coord7.left + (coord7.right - coord7.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+ }
+if(coord0.bottom >= (coord8.bottom - (coord8.bottom - coord8.top)) && coord0.top <= (coord8.top + (coord8.bottom - coord8.top)) && coord0.left > (coord8.left - (coord0.right - coord0.left)) && coord0.left  < (coord8.left + (coord8.right - coord8.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+ }
+
+if(coord0.bottom >= (coord9.bottom - (coord9.bottom - coord9.top)) && coord0.top <= (coord9.top + (coord9.bottom - coord9.top)) && coord0.left > (coord9.left - (coord0.right - coord0.left)) && coord0.left  < (coord9.left + (coord9.right - coord9.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+}
+
+if(coord0.bottom >= (coord10.bottom - (coord10.bottom - coord10.top)) && coord0.top <= (coord10.top + (coord10.bottom - coord10.top)) && coord0.left > (coord10.left - (coord0.right - coord0.left)) && coord0.left  < (coord10.left + (coord10.right - coord10.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+}
+
+if(coord0.bottom >= (coord11.bottom - (coord11.bottom - coord11.top)) && coord0.top <= (coord11.top + (coord11.bottom - coord11.top)) && coord0.left > (coord11.left - (coord0.right - coord0.left)) && coord0.left  < (coord11.left + (coord11.right - coord11.left))) {
+/*block["bodyBlock4"].style.transform = "rotate(0)";
+block["bodyBlock5"].style.transform = "rotate(0)";
+clearInterval(timerId09);
+clearInterval(timerId10);*/
+stopToGame();
+
+ }
+};
+
+</script>
+</body>
+</html>
